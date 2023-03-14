@@ -1,17 +1,15 @@
 ## Linux Command GPT (lcg)
 Get Linux commands in natural language with the power of ChatGPT.
+This is a rewrite in Python, mostly done with GPT-4.
 
 ### Installation
-Build from source
+This comes with a shell script predone, just link to your $PATH.
 ```bash
-> git clone --depth 1 https://github.com/asrul10/linux-command-gpt.git ~/.linux-command-gpt
-> cd ~/.linux-command-gpt
-> go build -o lcg
-# Add to your environment $PATH
-> ln -s ~/.linux-command-gpt/lcg ~/.local/bin
+> git clone https://github.com/Zack-Fisher/linux-command-gpt-python
+> cd linux-command-gpt-python
+> sudo ln lcg /usr/bin/lcg
+> lcg
 ```
-
-Or you can [download lcg executable file](https://github.com/asrul10/linux-command-gpt/releases)
 
 ### Example Usage
 
@@ -21,7 +19,7 @@ Completed in 0.92 seconds
 ┌────────────────────────────────────┐
 │ tar -xvzf linux-command-gpt.tar.gz │
 └────────────────────────────────────┘
-Are you sure you want to execute the command? (Y/n):
+Are you sure you want to execute the command? (y/n):
 ```
 
 ### Options

@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+
+#this Python version and shell script are based on the original Go program created by asrul10 and available at https://github.com/asrul10/linux-command-gpt.
+
+import sys
+import os
+import time
+import requests
+from pathlib import Path
+
+HOST = "https://api.openai.com/v1/"
+COMPLETIONS = "chat/completions"
+MODEL = "gpt-3.5-turbo"
+PROMPT = """
+I want you to reply with a Linux command and nothing else. Do not write explanations.
+"""
+
+HELP = """
+Usage: lcg [options]
+
+  --help         output usage information
+  --version      output the version number
+"""
+
+VERSION = "0.1.0"
+
+def handle_command(cmd):
+    if cmd == "" or cmd == "--help" or cmd == "-h":
+        return "CMD_HELP"
+    if cmd == "--version" or cmd == "-v":
+        return "CMD_VERSION"
+    return "CMD_COMPLETION"
+
+def completions(api_key, prompt):
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}",
+    }
+    data = {
+        "model": MODEL,
+        "messages": [{"role": "system", "content": PROMPT}, {"role": "user", "content": prompt}],
+        "max_tokens": 50,
+    }
+
+    response = requests.post(HOST + COMPLETIONS, headers=headers, json=data)
+    response.raise_for_status()
+    return response.json()["choices"][0]["message"]["content"]
+
+
+def main():
+    cmd = " ".join(sys.argv[1:])
+    handler = handle_command(cmd)
+
+    if handler == "CMD_HELP":
+        print(HELP)
+        return
+
+    if handler == "CMD_VERSION":
+        print(VERSION)
+        return
+
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if api_key == None:
+        print(
+            """
+Couldn't find a definition for OPENAI_API_KEY in this shell environment.
+Run the command:
+> export OPENAI_API_KEY=<your api key here> 
+            """
+        )
+        return
+
+    start = time.time()
+    result = completions(api_key, cmd)
+    elapsed = round(time.time() - start, 2)
+
+    if not result:
+        return
+
+    print(f"Completed in {elapsed} seconds")
+    print("┌" + "─" * (len(result) + 2) + "┐")
+    print("│ " + result + " │")
+    print("└" + "─" * (len(result) + 2) + "┘")
+
+    confirm = input("Do you want to run the command? (y/n): ")
+
+    if confirm.lower() == 'y':
+        os.system(result)
+
+main()
