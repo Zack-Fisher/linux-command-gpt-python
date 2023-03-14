@@ -11,6 +11,15 @@ This comes with a shell script predone, just link to your $PATH.
 > lcg
 ```
 
+### API key
+Note: this script uses the environment variable OPENAI_API_KEY.
+Run the command
+```bash
+> export OPENAI_API_KEY=<your api key here>
+```
+to set that up.
+If you want the export to be permanent, add the line to your ~/.zshrc or ~/.bashrc.
+
 ### Example Usage
 
 ```bash
@@ -28,6 +37,4 @@ Are you sure you want to execute the command? (y/n):
 
 --help         output usage information
 --version      output the version number
---update-key   update the API key
---delete-key   delete the API key
 ```
